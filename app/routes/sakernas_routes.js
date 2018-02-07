@@ -44,7 +44,11 @@ module.exports = function(app, db) {
   });
 
   app.get('/pemutakhiran', (req, res) => {
-    const note = db.collection('pemutakhiran').find({}).toArray(function(err, result) {
+    var entri_p_sem = req.query.entri_p_sem;
+    var entri_p_prov = req.query.entri_p_prov;
+    var entri_p_kab = req.query.entri_p_kab;
+
+    const note = db.collection('pemutakhiran').find({"semester":entri_p_sem, "kode_prov":entri_p_prov, "kode_kab":entri_p_kab}).toArray(function(err, result) {
       if (err) throw err;
       res.json(result);
     });
