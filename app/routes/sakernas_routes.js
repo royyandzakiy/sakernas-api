@@ -95,6 +95,43 @@ module.exports = function(app, db) {
           });
         });
 
+        app.get('/data-rt-monitor', (req, res) => {
+          var entri_p_kab = req.query['kode_kab'];
+          var entri_p_prov = req.query['kode_prov'];
+          var entri_p_sem = req.query['semester'];
+          var entri_p_kec = req.query['kode_kec'];
+          var entri_p_desa = req.query['kode_desa'];
+          var entri_p_nks = req.query['nks'];
+
+          //--- tentukan berapa jumlah parameter request, apakah 3 atau 6
+          var temp = {};
+          if (typeof entri_p_sem == 'undefined')
+          temp = {
+                "kode_prov":entri_p_prov,
+                "kode_kab":entri_p_kab
+              }
+          else if (typeof entri_p_kec == 'undefined')
+              temp = {
+                "semester":entri_p_sem,
+                "kode_prov":entri_p_prov,
+                "kode_kab":entri_p_kab
+              }
+          else
+              temp = {
+                "semester":entri_p_sem,
+                "kode_prov":entri_p_prov,
+                "kode_kab":entri_p_kab,
+                // "kode_kec":entri_p_kec,
+                // "kode_desa":entri_p_desa,
+                // "nks":entri_p_nks
+              }
+
+          const note = db.collection('data_rt').find(temp).toArray(function(err, result) {
+            if (err) throw err;
+            res.json(result);
+          });
+        });
+
   app.get('/ruta', (req, res) => {
     // cari Dsrt
     // cari data_rt & data_art yg sesuai
@@ -195,7 +232,7 @@ module.exports = function(app, db) {
           var entri_p_desa = req.query['kode_desa'];
           var entri_p_nks = req.query['nks'];
 
-          // console.log("req.query: "+ JSON.stringify(req.query));
+          console.log("req.query: "+ JSON.stringify(req.query));
 
           //--- tentukan berapa jumlah parameter request, apakah 3 atau 6
           var temp = {};
