@@ -6,7 +6,7 @@ const app            = express();
 const db             = require('./config/db');
 const cors           = require('cors')
 
-const port = 8002;
+const port = 8002 || process.env.PORT;
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors());
