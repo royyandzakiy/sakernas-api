@@ -3,14 +3,6 @@ var ObjectID = require('mongodb').ObjectID;
 // routes/sakernas_routes.js
 module.exports = function(app, db) {
   // AKSES COLLECTIONS
-  app.get('/petugas-lap/all', (req, res) => {
-    const note = db.collection('petugas_lap').find({}).toArray(function(err, result) {
-      // const note = db.collection('master_kab').find({"kode_prov" : {$regex : ".*00.*"}}, {_id: 0, kode_prov: 1, kode_kab: 1, nama_kab: 1}).toArray(function(err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-  });
-
   app.get('/nks', (req, res) => {
     const note = db.collection('master_nks').find({}).toArray(function(err, result) {
       if (err) throw err;
@@ -439,11 +431,11 @@ module.exports = function(app, db) {
           });
         });
 
-        app.put('/petugas-lap/update:id', (req, res) => {
+        app.put('/petugas-lap/update/:id', (req, res) => {
           if (!req.body) return res.sendStatus(400);
           const temp = { '_id': new ObjectID(req.params.id) };
 
-          console.log(_id);
+          console.log("_id to update: "+temp._id);
 
           var semester = req.body.edit_petugas_sem;
           var kode_prov = req.body.edit_petugas_prov;
@@ -465,10 +457,23 @@ module.exports = function(app, db) {
             "no_telp":no_telp
           };
 
-          console.log(JSON.stringify(data));
+          console.log("data updated: "+JSON.stringify(data));
 
           const note = db.collection('petugas_lap').updateOne(temp, data, function(err, result) {
               if (err) throw err;
+              console.log(JSON.stringify(result));
+              res.json(result);
+          });
+        });
+
+        app.delete('/petugas-lap/:id', (req, res) => {
+          const temp = { '_id': new ObjectID(req.params.id) };
+
+          console.log("_id tobe deleted: "+temp._id);
+
+          const note = db.collection('petugas_lap').remove(temp, function(err, result) {
+              if (err) throw err;
+              res.json(result);
           });
         });
 
